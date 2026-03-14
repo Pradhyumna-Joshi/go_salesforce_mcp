@@ -27,4 +27,11 @@ var ORG_TOOLS = []models.MCPTools{
 		},
 		Handler: models.WrapHandler(OpenSalesforceOrg),
 	},
+	{
+		Tool: &mcp.Tool{
+			Name:        "disconnect_salesforce_org",
+			Description: "This tool is used disconnect salesforce org",
+		},
+		Handler: models.WrapHandler(DisconnectSalesforceOrg),
+	},
 }

@@ -1,8 +1,7 @@
 package main
 
 import (
-	"log"
-	"net/http"
+	"context"
 
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -27,13 +26,18 @@ func (s *MCPServer) Run() error {
 		mcp.AddTool(server, t.Tool, t.Handler)
 	}
 
-	handler := mcp.NewSSEHandler(func(r *http.Request) *mcp.Server {
-		return server
-	}, nil)
+	return server.Run(context.Background(), &mcp.StdioTransport{})
 
-	http.Handle("/mcp", handler)
+	/*
+		FOR REMOTE MCP SERVER
+		handler := mcp.NewStreamableHTTPHandler(func(r *http.Request) *mcp.Server {
+			return server
+		}, nil)
 
-	log.Println("MCP server running on : 8080")
+		http.Handle("/mcp", handler)
 
-	return http.ListenAndServe(":8080", nil)
+		log.Println("MCP server running on : 8080")
+
+		return http.ListenAndServe(":8080", nil)
+	*/
 }

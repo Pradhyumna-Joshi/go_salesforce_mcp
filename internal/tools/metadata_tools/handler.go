@@ -3,41 +3,15 @@ package tools
 import (
 	"context"
 	"fmt"
-	"io"
-	"net/http"
 
-	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/config"
+	repo "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/repository"
 )
-
-var SFClient = &http.Client{}
-
-// Generic salesforce request generator
-func SalesforceMetadataRequest(method string, path string, data io.Reader) ([]byte, error) {
-
-	url := config.Conf.Sfconfig.InstanceURL + path
-
-	r, err := http.NewRequest(method, url, data)
-	if err != nil {
-		return nil, err
-	}
-
-	r.Header.Set("Authorization", "Bearer "+config.Conf.Sfconfig.AccessToken)
-
-	resp, err := SFClient.Do(r)
-	if err != nil {
-		return nil, err
-	}
-
-	defer resp.Body.Close()
-	return io.ReadAll(resp.Body)
-
-}
 
 func DescribeSObject(ctx context.Context, input SObjectRequest) (string, error) {
 
-	path := fmt.Sprintf("/services/data/v61.0/sobjects/%s/describe", input.Object)
+	url := fmt.Sprintf("/services/data/v61.0/sobjects/%s/describe", input.Object)
 
-	body, err := SalesforceMetadataRequest("GET", path, nil)
+	body, err := repo.SalesforceRequest("GET", url, nil)
 
 	if err != nil {
 		return "", err
@@ -47,9 +21,9 @@ func DescribeSObject(ctx context.Context, input SObjectRequest) (string, error) 
 
 func ListSObjects(ctx context.Context, e any) (string, error) {
 
-	path := "/services/data/v61.0/sobjects"
+	url := "/services/data/v61.0/sobjects"
 
-	body, err := SalesforceMetadataRequest("GET", path, nil)
+	body, err := repo.SalesforceRequest("GET", url, nil)
 
 	if err != nil {
 		return "", nil

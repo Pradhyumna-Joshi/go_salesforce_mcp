@@ -76,3 +76,17 @@ func OpenSalesforceOrg(ctx context.Context, e Empty) (string, error) {
 
 	return string(body), nil
 }
+
+func DisconnectSalesforceOrg(ctx context.Context, e Empty) (string, error) {
+
+	cmd := exec.Command("sf", "org", "logout")
+
+	body, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	log.Println(string(body))
+
+	return string(body), nil
+}

@@ -20,6 +20,50 @@ var DATA_TOOLS = []models.MCPTools{
 				},
 			},
 		},
-		Handler: models.WrapHandler(QuerySObjectHandler),
+		Handler: models.WrapHandler(QuerySObject),
+	},
+	{
+		Tool: &mcp.Tool{
+			Name:        "create_record",
+			Description: "This tool is used to create any sobject record.",
+			InputSchema: map[string]any{
+				"type": "object",
+				"properties": map[string]any{
+					"object": map[string]any{
+						"type":        "string",
+						"description": "the specified sobject",
+					},
+					"fields": map[string]any{
+						"type":        "object",
+						"description": "the fields to create record",
+					},
+				},
+			},
+		},
+		Handler: models.WrapHandler(CreateRecord),
+	},
+	{
+		Tool: &mcp.Tool{
+			Name:        "update_record",
+			Description: "This tool is used to update any sobject record.",
+			InputSchema: map[string]any{
+				"type": "object",
+				"properties": map[string]any{
+					"id": map[string]any{
+						"type":        "string",
+						"description": "the record Id to update",
+					},
+					"object": map[string]any{
+						"type":        "string",
+						"description": "the specified sobject",
+					},
+					"fields": map[string]any{
+						"type":        "object",
+						"description": "the fields to update record",
+					},
+				},
+			},
+		},
+		Handler: models.WrapHandler(UpdateRecord),
 	},
 }
