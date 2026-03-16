@@ -11,7 +11,7 @@ import (
 
 func main() {
 
-	lstTools := make([]models.MCPTools, 0)
+	lstTools := make([]models.MCPTool, 0)
 	lstTools = append(lstTools, org_tools.ORG_TOOLS...)
 	lstTools = append(lstTools, data_tools.DATA_TOOLS...)
 	lstTools = append(lstTools, mdt_tools.METADATA_TOOLS...)

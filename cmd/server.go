@@ -8,10 +8,10 @@ import (
 )
 
 type MCPServer struct {
-	tools []models.MCPTools
+	tools []models.MCPTool
 }
 
-func NewMCPServer(tools []models.MCPTools) *MCPServer {
+func NewMCPServer(tools []models.MCPTool) *MCPServer {
 	return &MCPServer{tools}
 }
 

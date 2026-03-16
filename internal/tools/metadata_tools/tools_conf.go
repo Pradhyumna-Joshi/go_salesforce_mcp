@@ -5,7 +5,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-var METADATA_TOOLS = []models.MCPTools{
+var METADATA_TOOLS = []models.MCPTool{
 	{
 		Tool: &mcp.Tool{
 			Name:        "describe_sobject",

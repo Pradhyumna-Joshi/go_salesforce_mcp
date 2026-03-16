@@ -5,7 +5,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-var DATA_TOOLS = []models.MCPTools{
+var DATA_TOOLS = []models.MCPTool{
 	{
 		Tool: &mcp.Tool{
 			Name:        "Query_Sobject",

@@ -5,7 +5,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-var ORG_TOOLS = []models.MCPTools{
+var ORG_TOOLS = []models.MCPTool{
 	{
 		Tool: &mcp.Tool{
 			Name:        "Login_to_Salesforce_org",

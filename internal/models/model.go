@@ -7,7 +7,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-type MCPTools struct {
+type MCPTool struct {
 	Tool    *mcp.Tool
 	Handler func(context.Context, *mcp.CallToolRequest, any) (*mcp.CallToolResult, any, error)
 }

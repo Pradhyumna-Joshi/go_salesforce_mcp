@@ -31,6 +31,7 @@ func SalesforceRequest(method string, path string, data any) ([]byte, error) {
 	}
 
 	r.Header.Set("Authorization", "Bearer "+config.Conf.Sfconfig.AccessToken)
+	r.Header.Set("Content-Type", "application/json")
 
 	resp, err := SFClient.Do(r)
 	if err != nil {
