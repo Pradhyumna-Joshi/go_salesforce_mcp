@@ -11,6 +11,7 @@ import (
 
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/config"
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
+	"github.com/pkg/browser"
 )
 
 func LoginToOrgHandler(ctx context.Context, e any) (string, error) {
@@ -25,8 +26,10 @@ func LoginToOrgHandler(ctx context.Context, e any) (string, error) {
 	authURL := config.Conf.Sfconfig.LoginURL + "?" + data.Encode()
 
 	// open this url in the browser
-	return authURL, nil
-
+	if err := browser.OpenURL(authURL); err != nil {
+		return "Please open this URL manually: " + authURL, nil
+	}
+	return "Browser opened for Salesforce login. Please complete authentication.", nil
 }
 
 func HandleCallBack(w http.ResponseWriter, r *http.Request) {

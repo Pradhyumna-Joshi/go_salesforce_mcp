@@ -32,7 +32,7 @@ type SalesforceConfig struct {
 func LoadConfig() *Config {
 
 	if err := godotenv.Load("/Users/pradhyumnajoshi/go-dev/go_salesforce_mcp/.env"); err != nil {
-		log.Println(".env not found")
+		log.Println(".env not found ", err)
 	}
 
 	log.Println("CLIENT ID", os.Getenv("SF_CLIENT_ID"))
