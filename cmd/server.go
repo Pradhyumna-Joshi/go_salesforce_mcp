@@ -1,9 +1,12 @@
 package main
 
 import (
-	"context"
+	"log"
+	"net/http"
 
+	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/config"
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
+	org_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/org_tools"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
@@ -26,18 +29,18 @@ func (s *MCPServer) Run() error {
 		mcp.AddTool(server, t.Tool, t.Handler)
 	}
 
-	return server.Run(context.Background(), &mcp.StdioTransport{})
+	//return server.Run(context.Background(), &mcp.StdioTransport{})
 
-	/*
-		FOR REMOTE MCP SERVER
-		handler := mcp.NewStreamableHTTPHandler(func(r *http.Request) *mcp.Server {
-			return server
-		}, nil)
+	//FOR REMOTE MCP SERVER
+	handler := mcp.NewStreamableHTTPHandler(func(r *http.Request) *mcp.Server {
+		return server
+	}, nil)
 
-		http.Handle("/mcp", handler)
+	http.Handle("/mcp", handler)
 
-		log.Println("MCP server running on : 8080")
+	http.HandleFunc("/callback", org_tools.HandleCallBack)
 
-		return http.ListenAndServe(":8080", nil)
-	*/
+	log.Println("MCP server running on : ", config.Conf.ServerConfig.Addr)
+
+	return http.ListenAndServe(":"+config.Conf.ServerConfig.Addr, nil)
 }

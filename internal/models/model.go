@@ -12,6 +12,12 @@ type MCPTool struct {
 	Handler func(context.Context, *mcp.CallToolRequest, any) (*mcp.CallToolResult, any, error)
 }
 
+type TokenResponse struct {
+	AccessToken string `json:"access_token"`
+	InstanceURL string `json:"instance_url"`
+	TokenType   string `json:"token_type"`
+}
+
 func WrapHandler[T any](
 	f func(context.Context, T) (string, error)) func(context.Context, *mcp.CallToolRequest, any) (*mcp.CallToolResult, any, error) {
 	return func(ctx context.Context, req *mcp.CallToolRequest, input any) (*mcp.CallToolResult, any, error) {
