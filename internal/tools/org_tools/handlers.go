@@ -9,11 +9,30 @@ import (
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/config"
 )
 
-func LoginToOrgHandler(ctx context.Context, e any) (string, error) {
+func connectToOrg(ctx context.Context, inputReq ConnectToOrgInput) (string, error) {
 
-	cmd := exec.Command("sf", "org", "login", "web", "--set-default", "--json")
+	if inputReq.OrgType == "" {
+		return "Invalid orgType, Must be 'production' or 'sandbox'.", nil
+	}
 
-	body, err := cmd.CombinedOutput()
+	if inputReq.Alias == "" {
+		return "Invalid alias: Alias cannot be empty.", nil
+	}
+
+	var cmd *exec.Cmd
+	prodUrl := "https://login.salesforce.com"
+	sandboxUrl := "https://test.salesforce.com"
+
+	switch inputReq.OrgType {
+	case "production":
+		cmd = exec.Command("sf", "org", "login", "web", "--set-default", "--alias", inputReq.Alias, "--instance-url", prodUrl, "--json")
+	case "sandbox":
+		cmd = exec.Command("sf", "org", "login", "web", "--set-default", "--alias", inputReq.Alias, "--instance-url", sandboxUrl, "--json")
+	default:
+		return "Invalid orgType, Must be 'production' or 'sandbox'.", nil
+	}
+
+	resBody, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", err
 	}
@@ -23,7 +42,7 @@ func LoginToOrgHandler(ctx context.Context, e any) (string, error) {
 	log.Println(config.Conf.Sfconfig.AccessToken)
 	log.Println(config.Conf.Sfconfig.InstanceURL)
 
-	return string(body), nil
+	return string(resBody), nil
 }
 
 func LoadSalesforceSession() error {
@@ -49,44 +68,52 @@ func LoadSalesforceSession() error {
 	return nil
 }
 
-func ListAllOrgs(ctx context.Context, e Empty) (string, error) {
+func listOrgs(ctx context.Context, e any) (string, error) {
 
-	cmd := exec.Command("sf", "org", "list")
+	cmd := exec.Command("sf", "org", "list", "--json")
 
-	body, err := cmd.Output()
+	resBody, err := cmd.Output()
 	if err != nil {
 		return "", err
 	}
 
-	log.Println(string(body))
+	log.Println(string(resBody))
 
-	return string(body), nil
+	return string(resBody), nil
 }
 
-func OpenSalesforceOrg(ctx context.Context, e Empty) (string, error) {
+func openOrg(ctx context.Context, inputReq OpenOrgInput) (string, error) {
+	log.Printf("openOrg Input received: %+v", inputReq)
+	if inputReq.Alias == "" {
+		return "Invalid alias: Run list_orgs to see available orgs.", nil
+	}
 
-	cmd := exec.Command("sf", "org", "open")
+	cmd := exec.Command("sf", "org", "open", "--target-org", inputReq.Alias)
 
-	body, err := cmd.Output()
+	resBody, err := cmd.Output()
 	if err != nil {
 		return "", err
 	}
 
-	log.Println(string(body))
+	log.Println(string(resBody))
 
-	return string(body), nil
+	return string(resBody), nil
 }
 
-func DisconnectSalesforceOrg(ctx context.Context, e Empty) (string, error) {
+func disconnectOrg(ctx context.Context, inputReq DisconnectOrgInput) (string, error) {
+	log.Printf("disconnectOrg Input received: %+v", inputReq)
+	if inputReq.Alias == "" {
+		return "Invalid alias: Run list_orgs to see available orgs.", nil
+	}
+	cmd := exec.Command("sf", "org", "logout", "--target-org", inputReq.Alias, "--no-prompt", "--json")
 
-	cmd := exec.Command("sf", "org", "logout")
+	resBody, err := cmd.Output()
 
-	body, err := cmd.Output()
 	if err != nil {
 		return "", err
 	}
 
-	log.Println(string(body))
+	log.Println(string(resBody))
 
-	return string(body), nil
+	return string(resBody), nil
 }

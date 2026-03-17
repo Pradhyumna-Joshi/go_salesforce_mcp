@@ -1,4 +1,4 @@
-package common
+package repository
 
 import (
 	"bytes"
@@ -11,34 +11,32 @@ import (
 
 var SFClient = &http.Client{}
 
-func SalesforceRequest(method string, path string, data any) ([]byte, error) {
+func SalesforceRequest(httpMethod string, path string, reqBody any) ([]byte, error) {
 
 	url := config.Conf.Sfconfig.InstanceURL + path
 
 	var body io.Reader
-	if data != nil {
-		b, err := json.Marshal(data)
+	if reqBody != nil {
+		b, err := json.Marshal(reqBody)
 		if err != nil {
 			return nil, err
 		}
 		body = bytes.NewBuffer(b)
-
 	}
 
-	r, err := http.NewRequest(method, url, body)
+	httpRequest, err := http.NewRequest(httpMethod, url, body)
 	if err != nil {
 		return nil, err
 	}
 
-	r.Header.Set("Authorization", "Bearer "+config.Conf.Sfconfig.AccessToken)
-	r.Header.Set("Content-Type", "application/json")
+	httpRequest.Header.Set("Authorization", "Bearer "+config.Conf.Sfconfig.AccessToken)
+	httpRequest.Header.Set("Content-Type", "application/json")
 
-	resp, err := SFClient.Do(r)
+	httpResponse, err := SFClient.Do(httpRequest)
 	if err != nil {
 		return nil, err
 	}
 
-	defer resp.Body.Close()
-	return io.ReadAll(resp.Body)
-
+	defer httpResponse.Body.Close()
+	return io.ReadAll(httpResponse.Body)
 }

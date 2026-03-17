@@ -2,31 +2,9 @@ package tools
 
 import (
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
-	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 var METADATA_TOOLS = []models.MCPTool{
-	{
-		Tool: &mcp.Tool{
-			Name:        "describe_sobject",
-			Description: "This tool is used to describe the sobject data",
-			InputSchema: map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"object": map[string]any{
-						"type":        "string",
-						"description": "The SObject name to describe",
-					},
-				},
-			},
-		},
-		Handler: models.WrapHandler(DescribeSObject),
-	},
-	{
-		Tool: &mcp.Tool{
-			Name:        "list_sobjects",
-			Description: "This tool is used to list all sobjects",
-		},
-		Handler: models.WrapHandler(ListSObjects),
-	},
+	models.NewTool("describe_sobject", "Describe a Salesforce SObject schema including fields, types, and relationships. Use this before create or update to know available fields. Example: Account Contact Opportunity", DescribeSObject),
+	models.NewTool("list_sobjects", "List all available Salesforce SObject API names in the org. Use this when you don't know the SObject name to query or modify.", ListSObjects),
 }

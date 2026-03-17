@@ -2,36 +2,11 @@ package tools
 
 import (
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
-	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 var ORG_TOOLS = []models.MCPTool{
-	{
-		Tool: &mcp.Tool{
-			Name:        "Login_to_Salesforce_org",
-			Description: "This tool is used to login to the salesforce org",
-		},
-		Handler: models.WrapHandler(LoginToOrgHandler),
-	},
-	{
-		Tool: &mcp.Tool{
-			Name:        "list_all_orgs",
-			Description: "This tool is used to list all salesforce org",
-		},
-		Handler: models.WrapHandler(ListAllOrgs),
-	},
-	{
-		Tool: &mcp.Tool{
-			Name:        "open_salesforce_org",
-			Description: "This tool is used open salesforce org in default browser",
-		},
-		Handler: models.WrapHandler(OpenSalesforceOrg),
-	},
-	{
-		Tool: &mcp.Tool{
-			Name:        "disconnect_salesforce_org",
-			Description: "This tool is used disconnect salesforce org",
-		},
-		Handler: models.WrapHandler(DisconnectSalesforceOrg),
-	},
+	models.NewTool("list_orgs", "List all connected Salesforce orgs. Call this first if org alias is unknown. Show user the aliases and ask which org to use.", listOrgs),
+	models.NewTool("connect_to_org", "Connect to a Salesforce org via browser login.Ask user: 'production' or 'sandbox'? Ask user: what alias to give this org? (e.g. prod-org, my-sandbox) After login, call list_orgs to confirm connection.", connectToOrg),
+	models.NewTool("open_org", "Open a Salesforce org in the browser.", openOrg),
+	models.NewTool("disconnect_org", "Logout and disconnect from a Salesforce org. Always confirm with user before calling this.", disconnectOrg),
 }

@@ -3,20 +3,21 @@ package tools
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/url"
 
 	repo "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/repository"
 )
 
 func QuerySObject(ctx context.Context, query QueryPayload) (string, error) {
-
+	log.Printf("QuerySObject Input received: %+v", query)
 	url := fmt.Sprintf(
 		"/services/data/v59.0/query?q=%s",
 		url.QueryEscape(query.Soql),
 	)
 
 	body, err := repo.SalesforceRequest("GET", url, nil)
-
+	log.Println("QuerySObject - Response:", string(body))
 	if err != nil {
 		return "", err
 	}
@@ -26,7 +27,7 @@ func QuerySObject(ctx context.Context, query QueryPayload) (string, error) {
 }
 
 func CreateRecord(ctx context.Context, input CreateRecordPayload) (string, error) {
-
+	log.Printf("CreateRecord Input received: %+v", input)
 	url := fmt.Sprintf(
 		"/services/data/v61.0/sobjects/%s",
 		url.QueryEscape(input.Object),
