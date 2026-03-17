@@ -21,7 +21,7 @@ func LoginToOrgHandler(ctx context.Context, e any) (string, error) {
 	data := url.Values{}
 	data.Add("response_type", "code")
 	data.Add("client_id", config.Conf.Sfconfig.ClientID)
-	data.Add("redirect_uri", "http://localhost:8080/callback")
+	data.Add("redirect_uri", config.Conf.Sfconfig.RedirectURI)
 
 	authURL := config.Conf.Sfconfig.LoginURL + "?" + data.Encode()
 

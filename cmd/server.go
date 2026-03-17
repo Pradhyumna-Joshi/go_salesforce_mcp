@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/config"
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
 	org_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/org_tools"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -39,7 +40,7 @@ func (s *MCPServer) Run() error {
 
 	http.HandleFunc("/callback", org_tools.HandleCallBack)
 
-	log.Println("MCP server running on : 8080")
+	log.Println("MCP server running on : ", config.Conf.ServerConfig.Addr)
 
-	return http.ListenAndServe(":8080", nil)
+	return http.ListenAndServe(":"+config.Conf.ServerConfig.Addr, nil)
 }
