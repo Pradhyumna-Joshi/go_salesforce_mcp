@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
+	apex_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/apex_tools"
 	data_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/data_tools"
 	mdt_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/metadata_tools"
 	org_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/org_tools"
@@ -15,9 +16,31 @@ func main() {
 	lstTools = append(lstTools, org_tools.ORG_TOOLS...)
 	lstTools = append(lstTools, data_tools.DATA_TOOLS...)
 	lstTools = append(lstTools, mdt_tools.METADATA_TOOLS...)
+	lstTools = append(lstTools, apex_tools.APEX_TOOLS...)
 
-	server := NewMCPServer(lstTools)
+	lstToolCategories := make([]models.ToolCategory, 0)
+	lstToolCategories = append(lstToolCategories, models.ToolCategory{
+		Name:        "OrgManagementTools",
+		Description: "Tools for managing Salesforce org connections, including connecting to new orgs, listing connected orgs, and disconnecting from orgs.",
+		Tools:       org_tools.ORG_TOOLS,
+	})
+	lstToolCategories = append(lstToolCategories, models.ToolCategory{
+		Name:        "DataTools",
+		Description: "Tools for querying and manipulating Salesforce data, including creating, updating, and retrieving records.",
+		Tools:       data_tools.DATA_TOOLS,
+	})
+	lstToolCategories = append(lstToolCategories, models.ToolCategory{
+		Name:        "MetadataTools",
+		Description: "Tools for retrieving and manipulating Salesforce metadata, including describing objects and fields.",
+		Tools:       mdt_tools.METADATA_TOOLS,
+	})
+	lstToolCategories = append(lstToolCategories, models.ToolCategory{
+		Name:        "ApexTools",
+		Description: "Tools for interacting with Salesforce Apex and Tooling API. Includes executing Apex code, managing Apex classes and triggers, running tests, retrieving debug logs, managing trace flags, and analyzing code coverage. These tools are primarily used for development, debugging, and runtime execution of Apex logic within Salesforce.",
+		Tools:       apex_tools.APEX_TOOLS,
+	})
 
+	server := NewMCPServer(lstTools, lstToolCategories)
 	if err := server.Run(); err != nil {
 		log.Println("Failed to run server")
 	}

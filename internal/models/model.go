@@ -12,8 +12,14 @@ import (
 )
 
 type MCPTool struct {
-	Tool    *mcp.Tool
-	Handler func(context.Context, *mcp.CallToolRequest, any) (*mcp.CallToolResult, any, error)
+	Tool    *mcp.Tool                                                                          `json:"tool"`
+	Handler func(context.Context, *mcp.CallToolRequest, any) (*mcp.CallToolResult, any, error) `json:"-"`
+}
+
+type ToolCategory struct {
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Tools       []MCPTool `json:"tools"`
 }
 
 func RequestResponseWrapper[T any](toolHandler func(context.Context, T) (string, error)) func(context.Context, *mcp.CallToolRequest, any) (*mcp.CallToolResult, any, error) {

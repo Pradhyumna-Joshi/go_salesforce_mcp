@@ -11,7 +11,7 @@ var Conf = LoadConfig()
 
 type Config struct {
 	ServerConfig ServerConfig
-	Sfconfig    SalesforceConfig
+	Sfconfig     SalesforceConfig
 }
 
 type ServerConfig struct {
