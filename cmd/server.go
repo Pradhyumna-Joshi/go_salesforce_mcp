@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
@@ -74,7 +73,7 @@ func (s *MCPServer) Run(srv *http.Server) error {
 	http.Handle("/mcp", handler)
 
 	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+	signal.Notify(stop, shutdownSignals...)
 
 	serverErrors := make(chan error, 1)
 
