@@ -1,30 +1,24 @@
-# Build stage
-FROM golang:1.26.1-alpine3.23 AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
-# Copy go mod files
 COPY go.mod go.sum ./
-
-# Download dependencies
 RUN go mod download
 
-# Copy source code
 COPY . .
 
-# Build binary
 RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd
 
-# Run stage
 FROM alpine:latest
 
-RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
+RUN adduser -D mcpuser
+USER mcpuser
 
 WORKDIR /app
 
-# Copy binary from builder
 COPY --from=builder /app/main .
 
+ENV SF_MCP_PORT=9000
 EXPOSE 9000
 
 CMD ["./main"]
