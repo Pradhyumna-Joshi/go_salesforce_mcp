@@ -5,6 +5,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
@@ -28,7 +32,7 @@ func NewMCPServer(tools []models.MCPTool, toolCategory []models.ToolCategory) *M
 	}
 }
 
-func (s *MCPServer) Run() error {
+func (s *MCPServer) Run(srv *http.Server) error {
 
 	server := mcp.NewServer(&mcp.Implementation{
 		Name:    "SalesforceMCP",
@@ -63,19 +67,41 @@ func (s *MCPServer) Run() error {
 		mcp.AddTool(server, t.Tool, t.Handler)
 	}
 
-	//return server.Run(context.Background(), &mcp.StdioTransport{})
-
-	//FOR REMOTE MCP SERVER
 	handler := mcp.NewStreamableHTTPHandler(func(r *http.Request) *mcp.Server {
 		return server
 	}, nil)
 
 	http.Handle("/mcp", handler)
 
-	log.Println("MCP server running on : 9000")
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 
-	return http.ListenAndServe(":9000", nil)
+	serverErrors := make(chan error, 1)
 
+	go func() {
+		log.Println("Salesforce MCP Server running on " + srv.Addr)
+		serverErrors <- srv.ListenAndServe()
+	}()
+
+	select {
+	case err := <-serverErrors:
+		if err != http.ErrServerClosed {
+			return err
+		}
+	case sig := <-stop:
+		log.Printf("Signal %v received. Starting graceful shutdown...\n", sig)
+
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		if err := srv.Shutdown(shutdownCtx); err != nil {
+			log.Printf("Shutdown failed: %v. Forcing close.\n", err)
+			return srv.Close()
+		}
+	}
+
+	log.Println("Salesforce MCP Server Stopped !!!")
+	return nil
 }
 
 type NoInput struct{}
