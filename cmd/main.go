@@ -6,6 +6,7 @@ import (
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
 	apex_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/apex_tools"
 	data_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/data_tools"
+	lwc_aura_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/lwc_aura_tools"
 	mdt_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/metadata_tools"
 	org_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/org_tools"
 )
@@ -17,6 +18,7 @@ func main() {
 	lstTools = append(lstTools, data_tools.DATA_TOOLS...)
 	lstTools = append(lstTools, mdt_tools.METADATA_TOOLS...)
 	lstTools = append(lstTools, apex_tools.APEX_TOOLS...)
+	lstTools = append(lstTools, lwc_aura_tools.UI_COMPONENTS_TOOLS...)
 
 	lstToolCategories := make([]models.ToolCategory, 0)
 	lstToolCategories = append(lstToolCategories, models.ToolCategory{
@@ -38,6 +40,11 @@ func main() {
 		Name:        "ApexTools",
 		Description: "Tools for interacting with Salesforce Apex and Tooling API. Includes executing Apex code, managing Apex classes and triggers, running tests, retrieving debug logs, managing trace flags, and analyzing code coverage. These tools are primarily used for development, debugging, and runtime execution of Apex logic within Salesforce.",
 		Tools:       apex_tools.APEX_TOOLS,
+	})
+	lstToolCategories = append(lstToolCategories, models.ToolCategory{
+		Name:        "LwcAuraTools",
+		Description: "Tools for managing and retrieving Salesforce Frontend components. Includes fetching source code and metadata for Lightning Web Components (LWC) and Aura Components (bundles, controllers, and markup). Use these tools when the user asks about UI logic, component resources, or frontend-to-backend dependencies.",
+		Tools:       lwc_aura_tools.UI_COMPONENTS_TOOLS,
 	})
 
 	server := NewMCPServer(lstTools, lstToolCategories)
