@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/models"
 	apex_tools "github.com/Pradhyumna-Joshi/go_salesforce_mcp/internal/tools/apex_tools"
@@ -62,12 +63,13 @@ func main() {
 
 	if err := server.Run(srv); err != nil {
 		log.Println("Failed to run Salesforce MCP Server")
+		log.Fatal(err)
 	}
 
 }
 
 func getEnv(key, defaultValue string) string {
-	val := os.Getenv(key)
+	val := strings.TrimSpace(os.Getenv(key))
 	if val == "" {
 		return defaultValue
 	}
