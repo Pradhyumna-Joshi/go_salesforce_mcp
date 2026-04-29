@@ -5,124 +5,72 @@ import (
 )
 
 var APEX_TOOLS = []models.MCPTool{
-	// Apex REST
 	models.NewTool(
 		"apex_rest_get",
-		"Execute a GET request on a custom Apex REST endpoint to retrieve data",
+		"Call custom GET Apex REST services. Use this when the org has custom integration endpoints defined with @HttpGet.",
 		ApexRestGet,
 	),
 	models.NewTool(
 		"apex_rest_post",
-		"Execute a POST request on a custom Apex REST endpoint to create records",
+		"Call custom POST Apex REST services. Best for complex operations or record creation handled by custom @HttpPost methods.",
 		ApexRestPost,
 	),
 	models.NewTool(
 		"apex_rest_patch",
-		"Execute a PATCH request on a custom Apex REST endpoint to update records",
+		"Call custom PATCH Apex REST services. Use this for partial updates to custom integration endpoints defined with @HttpPatch.",
 		ApexRestPatch,
 	),
 
-	// Apex Execution & Tooling Query
-	models.NewTool(
-		"apex_execute_anonymous",
-		"Execute anonymous Apex code using the Tooling API and return execution results",
-		ApexExecuteAnonymous,
-	),
-	models.NewTool(
-		"apex_tooling_query",
-		"Execute a SOQL query against Tooling API objects like ApexClass, ApexTrigger, ApexLog, and TraceFlag",
-		ApexToolingQuery,
-	),
-
-	// Apex Classes
 	models.NewTool(
 		"apex_class_get",
-		"Retrieve an Apex class by Id or Name using the Tooling API",
+		"Retrieve Apex class source code and metadata. You can provide either the 'id' OR the 'name'; the tool will automatically resolve the ID if only the Name is provided.",
 		GetApexClass,
 	),
 	models.NewTool(
 		"apex_class_create",
-		"Create a new Apex class with the provided name and body",
+		"Deploy a new Apex class to the org. Requires valid class body and name.",
 		CreateApexClass,
 	),
 	models.NewTool(
 		"apex_class_update",
-		"Update an existing Apex class by Id or Name with new source code",
+		"Update source code for an existing Apex class. You can provide 'id' or 'name'. This replaces the entire class body.",
 		UpdateApexClass,
 	),
-
-	// Apex Triggers
 	models.NewTool(
 		"apex_trigger_get",
-		"Retrieve an Apex trigger by Id or Name using the Tooling API",
+		"Retrieve Apex trigger source code and object bindings. Supports resolution by 'id' or 'name'.",
 		GetApexTrigger,
 	),
-	models.NewTool(
-		"apex_trigger_create",
-		"Create a new Apex trigger for a specified object",
-		CreateApexTrigger,
-	),
-	models.NewTool(
-		"apex_trigger_update",
-		"Update an existing Apex trigger by Id or Name with new source code",
-		UpdateApexTrigger,
-	),
 
-	// Logs
+	models.NewTool(
+		"apex_execute_anonymous",
+		"Execute a block of Apex code anonymously. Use this to test logic snippets, run one-off scripts, or verify behavior without creating a class.",
+		ApexExecuteAnonymous,
+	),
+	models.NewTool(
+		"apex_tooling_query",
+		"Perform SOQL queries specifically against Tooling API objects (e.g., ApexClass, ApexLog, TraceFlag). Use this for developer-meta-queries.",
+		ApexToolingQuery,
+	),
 	models.NewTool(
 		"apex_logs_list",
-		"Retrieve recent Apex debug logs ordered by most recent first",
+		"Fetch the most recent debug logs from the org. Returns IDs, status, and duration. Use this to find a LogId after an error occurs.",
 		ListApexLogs,
 	),
 	models.NewTool(
 		"apex_log_get_body",
-		"Retrieve the raw body of a specific Apex debug log by Id",
+		"Retrieve the full raw text of a specific debug log by its ID. Essential for reading System.debug output.",
 		GetApexLogBody,
 	),
 
-	// Trace Flags
-	models.NewTool(
-		"trace_flag_get",
-		"Retrieve a TraceFlag configuration by Id",
-		GetTraceFlag,
-	),
-	models.NewTool(
-		"trace_flag_create",
-		"Create a TraceFlag to enable debug logging for a user or Apex entity (Id or Name)",
-		CreateTraceFlag,
-	),
-	models.NewTool(
-		"trace_flag_update",
-		"Update an existing TraceFlag, such as extending expiration or changing debug level",
-		UpdateTraceFlag,
-	),
-
-	// Apex Tests
 	models.NewTool(
 		"apex_tests_run_async",
-		"Run Apex test classes or suites asynchronously and return a job Id",
+		"Enqueue an asynchronous test run for classes or suites. Returns a job ID; you must check results later.",
 		RunApexTestsAsync,
 	),
 	models.NewTool(
-		"apex_tests_get_result",
-		"Retrieve results of an asynchronous Apex test run using AsyncApexJob Id",
-		GetApexTestResult,
-	),
-	models.NewTool(
-		"apex_tests_run_sync",
-		"Run Apex test classes synchronously and return immediate results",
-		RunApexTestsSync,
-	),
-
-	// Code Coverage
-	models.NewTool(
 		"apex_code_coverage_get",
-		"Retrieve line-level code coverage for an Apex class or trigger using Id, class name, or trigger name",
+		"Get code coverage percentages for a specific class or trigger. Supports lookup by 'class_or_trigger_id', 'class_name', or 'trigger_name'.",
 		GetApexCodeCoverage,
-	),
-	models.NewTool(
-		"apex_code_coverage_org",
-		"Retrieve overall Apex code coverage percentage for the Salesforce org",
-		GetOrgWideCoverage,
 	),
 }
