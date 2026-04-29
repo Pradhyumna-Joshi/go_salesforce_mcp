@@ -49,7 +49,7 @@ func main() {
 
 	server := NewMCPServer(lstTools, lstToolCategories)
 	if err := server.Run(); err != nil {
-		log.Println("Failed to run server")
+		log.Println("Failed to run Salesforce MCP Server")
 	}
 
 }
