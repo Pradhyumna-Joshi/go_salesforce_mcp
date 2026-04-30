@@ -41,12 +41,12 @@ The Salesforce MCP Server exposes the full Salesforce platform as a set of struc
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                  AI Agent (Claude / Cursor)              │
+│                IDFC Nexus                               │
 └───────────────────────────┬─────────────────────────────┘
                             │ MCP (JSON-RPC over HTTP/SSE)
 ┌───────────────────────────▼─────────────────────────────┐
-│                Salesforce MCP Server (Go)                │
-│                                                          │
+│                Salesforce MCP Server (Go)               │
+│                                                         │
 │  ┌─────────────┐  ┌──────────────┐  ┌────────────────┐  │
 │  │ Org Mgmt    │  │Data/Metadata │  │ Apex / UI Dev  │  │
 │  │(CLI Bridge) │  │ (REST API)   │  │ (Tooling API)  │  │
@@ -54,8 +54,8 @@ The Salesforce MCP Server exposes the full Salesforce platform as a set of struc
 └─────────┼────────────────┼──────────────────┼───────────┘
           │                │                  │
 ┌─────────▼────────────────▼──────────────────▼───────────┐
-│                    Salesforce Platform                   │
-│          REST API   │   Tooling API   │   sf CLI         │
+│                    Salesforce Platform                  │
+│          REST API   │   Tooling API   │   sf CLI        │
 └─────────────────────────────────────────────────────────┘
 ```
 
